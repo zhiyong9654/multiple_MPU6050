@@ -66,34 +66,33 @@ class Gyro {
   void get_reading() {
     make_active();
     fifoCount = mpu.getFIFOCount();
-    if (fifoCount >= 1024) {
-      mpu.resetFIFO();
-      fifoCount = mpu.getFIFOCount();
-    }
-    else {
-      while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+    if (fifoCount >= packetSize && fifoCount < 1024) {
       mpu.getFIFOBytes(fifoBuffer, packetSize);
+      mpu.dmpGetQuaternion(&q, fifoBuffer);
+      mpu.dmpGetGravity(&gravity, &q);
+      mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+      mpu.dmpGetAccel(&aa, fifoBuffer);
+      mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+      if (print_out) {
+        Serial.print(add_sel_pin);
+        Serial.print(" Yaw:");
+        Serial.print(ypr[0] * 180/M_PI);
+        Serial.print("\t Pitch:");
+        Serial.print(ypr[1] * 180/M_PI);
+        Serial.print("\t Roll:");
+        Serial.print(ypr[2] * 180/M_PI);
+        Serial.print("\t aareal_X:");
+        Serial.print(aaReal.x);
+        Serial.print("\t aareal_Y:");
+        Serial.print(aaReal.y);
+        Serial.print("\t aareal_Z:");
+        Serial.println(aaReal.z);
+      }
     }
-    fifoCount -= packetSize;
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    mpu.dmpGetAccel(&aa, fifoBuffer);
-    mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-    if (print_out) {
+    else if (fifoCount >= 1024) {
+      mpu.resetFIFO();
       Serial.print(add_sel_pin);
-      Serial.print("ypr\t");
-      Serial.print(ypr[0] * 180/M_PI);
-      Serial.print("\t");
-      Serial.print(ypr[1] * 180/M_PI);
-      Serial.print("\t");
-      Serial.print(ypr[2] * 180/M_PI);
-      Serial.print("areal\t");
-      Serial.print(aaReal.x);
-      Serial.print("\t");
-      Serial.print(aaReal.y);
-      Serial.print("\t");
-      Serial.println(aaReal.z);
+      Serial.println(F("th sensor pin: FIFO OF"));
     }
   }
 };
@@ -120,7 +119,7 @@ void setup() {
   }
   
   gyro1.init(2, other_pins1, no_other_pins, true);
-  gyro2.init(3, other_pins2, no_other_pins);
+  gyro2.init(3, other_pins2, no_other_pins, true);
   gyro3.init(4, other_pins3, no_other_pins);
   gyro4.init(5, other_pins4, no_other_pins);
 }
