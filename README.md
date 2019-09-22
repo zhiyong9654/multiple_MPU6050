@@ -51,4 +51,5 @@ If you run into FIFO overflow very often, it is likely that the FIFO buffer is b
 ``` c++
 x02,   0x16,   0x02,   0x00, 0x04 // D_0_22 inv_set_fifo_rate
 ```
-The value you're interested in is the last value before the comment, 0x04. By tweaking this number, you can set the desired frequency for your MPU6050s. For example, at 0x04, frequency = (200/(1+4)) = 40hz. At 0x03, frequency is (200/(1+3)) = 50 hz.
+The value you're interested in is the last value before the comment, 0x04. By tweaking this number, you can set the desired frequency for your MPU6050s. For example, at 0x04, frequency = (200/(1+4)) = 40hz. At 0x03, frequency is (200/(1+3)) = 50 hz.  
+This is described here: (https://www.i2cdevlib.com/forums/topic/27-fifo-overflow/)
