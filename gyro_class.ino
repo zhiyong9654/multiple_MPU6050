@@ -33,10 +33,9 @@ class Gyro {
     digitalWrite(add_sel_pin, LOW);
     }
   }
-  void init(int address_select_pin, int *other_address_select_pins, int no_other_address_select_pins, bool printout = false) {
+  void init(int address_select_pin, int *other_address_select_pins, bool printout = false) {
     add_sel_pin = address_select_pin;
     other_add_sel_pins = other_address_select_pins;
-    no_other_add_sel_pins = no_other_address_select_pins;
     print_out = printout;
     
     make_active();
@@ -118,10 +117,10 @@ void setup() {
     pinMode(add_sel_pins[i], OUTPUT);
   }
   
-  gyro1.init(2, other_pins1, no_other_pins, true);
-  gyro2.init(3, other_pins2, no_other_pins, true);
-  gyro3.init(4, other_pins3, no_other_pins);
-  gyro4.init(5, other_pins4, no_other_pins);
+  gyro1.init(2, other_pins1, true);
+  gyro2.init(3, other_pins2, true);
+  gyro3.init(4, other_pins3);
+  gyro4.init(5, other_pins4);
 }
 
 void loop() {
