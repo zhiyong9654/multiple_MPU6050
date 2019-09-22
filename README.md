@@ -49,7 +49,7 @@ gyro1.get_reading();
 ## Issues
 If you run into FIFO overflow very often, it is likely that the FIFO buffer is being filled up way faster than it's being read. This can occur when you have many MPU6050s working at the same time. This can be addressed by tweaking the MPU6050 library itself, edit the file in ../MPU6050/src/MPU6050_6Axis_MotionApps20.h, and look for:  
 ``` c++
-x02,   0x16,   0x02,   0x00, 0x04 // D_0_22 inv_set_fifo_rate
+0x02,   0x16,   0x02,   0x00, 0x04 // D_0_22 inv_set_fifo_rate
 ```
 The value you're interested in is the last value before the comment, 0x04. By tweaking this number, you can set the desired frequency for your MPU6050s. For example, at 0x04, frequency = (200/(1+4)) = 40hz. At 0x03, frequency is (200/(1+3)) = 50 hz.  
 This is described here: (https://www.i2cdevlib.com/forums/topic/27-fifo-overflow/)
